@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TZIV – Turingov stroj</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="turing-page">
+  <header>
+    <nav>
+      <a href="index.html">Domov</a>
+      <a href="ram.html">RAM</a>
+      <a href="abacus.html">Počítadlo</a>
+      <a href="turing.html" class="active">Turingov stroj</a>
+      <a href="automata.html">Automaty</a>
+      <a href="proofs.html">Dôkazy</a>
+      <a href="test.html">Test</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Turingov stroj</h1>
+    <section class="howto card">
+      <h2>Návod na použitie</h2>
+      <p>Tu môžete definovať a vizualizovať Turingov stroj. Prechodová funkcia sa zapisuje po riadkoch v tvare <code>q0 0 -&gt; q1 1 R</code>, kde <code>q0</code> je aktuálny stav, <code>0</code> je čítaný symbol, <code>q1</code> je nový stav, <code>1</code> je symbol zapísaný na pásku a <code>R</code> označuje pohyb hlavy doľava (<code>L</code>), doprava (<code>R</code>) alebo žiadny (<code>N</code>). Písmenom <code>_</code> označíte prázdny symbol.</p>
+      <ul>
+        <li>Do poľa „Prechody“ zapíšte všetky prechodové pravidlá stroja, každý na samostatný riadok.</li>
+        <li>Do poľa „Vstupná páska“ zadajte počiatočný obsah pásky. Ako prázdny symbol použite znak <code>_</code>.</li>
+        <li>Do poľa „Akceptačné stavy“ zapíšte mená stavov, pri ktorých stroj zastaví a akceptuje vstup (oddelené medzerami).</li>
+        <li>Stlačte <strong>Načítať stroj</strong> a páska sa zobrazí. Pomocou tlačidiel <strong>Krok</strong>, <strong>Spustiť</strong>, <strong>Reset</strong> môžete sledovať beh stroja. Po zastavení v akceptačnom stave sa simulácia ukončí.</li>
+      </ul>
+    </section>
+    <p>
+      Turingov stroj je výpočtový model definovaný ako šesťica <span class="math">(K, Σ, Γ, δ, q<sub>0</sub>, F)</span>, kde
+      <em>K</em> je konečná množina stavov, Σ vstupná abeceda, Γ pracovná abeceda,
+      q<sub>0</sub> počiatočný stav a F množina akceptačných stavov. Prechodová
+      funkcia δ určuje na základe aktuálneho stavu a čítaného symbolu nový stav,
+      symbol na zápis a smer pohybu hlavy.
+    </p>
+    <div class="split-layout turing-layout">
+      <section class="card split-left">
+      <h2>Definícia stroja</h2>
+      <label for="tm-program">Prechody (riadok vo formáte: <code>q0 0 -> q1 1 R</code>)</label>
+      <textarea id="tm-program">q0 0 -> q0 0 R
+q0 1 -> q1 1 R
+q1 1 -> q1 1 R
+q1 _ -> qf _ N</textarea>
+      <label for="tm-input">Vstupná páska (reťazec z Σ)</label>
+      <input type="text" id="tm-input" value="0111">
+      <label for="tm-accept">Akceptačné stavy (oddelené medzerou)</label>
+      <input type="text" id="tm-accept" value="qf">
+      <button id="tm-load" type="button">Načítaj stroj</button>
+      <button id="tm-step" type="button" disabled>Krok</button>
+      <button id="tm-run" type="button" disabled>Spustiť</button>
+      <button id="tm-reset" type="button" disabled>Reset</button>
+      <label class="speed-control" for="tm-speed">
+        Rýchlosť behu: <span id="tm-speed-value">300 ms/krok</span>
+        <input type="range" id="tm-speed" min="20" max="1000" step="10" value="300">
+      </label>
+      <div>
+        <strong>Aktuálny stav:</strong> <span id="tm-current-state">–</span>
+      </div>
+      <div class="debug-panel" id="tm-debug">
+        <h3>Debug Turingovho stroja</h3>
+        <p><strong>Krok:</strong> <span id="tm-debug-step">–</span></p>
+        <p><strong>Pozícia hlavy:</strong> <span id="tm-debug-head">–</span></p>
+        <p><strong>Čítaný symbol:</strong> <span id="tm-debug-symbol">–</span></p>
+        <p><strong>Práve vykonávaný prechod:</strong> <span id="tm-debug-last">–</span></p>
+      </div>
+      </section>
+      <aside class="card split-right">
+        <h2>Páska a diagram</h2>
+        <div>
+          <h3>Páska</h3>
+          <div id="tm-tape" class="tape"></div>
+        </div>
+        <div class="graph-container">
+          <svg id="tm-svg" class="automaton" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <script src="turing.js"></script>
+</body>
+</html>

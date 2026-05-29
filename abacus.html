@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TZIV – Počítadlový stroj</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="abacus-page">
+  <header>
+    <nav>
+      <a href="index.html">Domov</a>
+      <a href="ram.html">RAM</a>
+      <a href="abacus.html" class="active">Počítadlo</a>
+      <a href="turing.html">Turingov stroj</a>
+      <a href="automata.html">Automaty</a>
+      <a href="proofs.html">Dôkazy</a>
+      <a href="test.html">Test</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Počítadlový stroj (Abacus)</h1>
+    <p>
+      Počítadlový stroj je jednoduchý výpočtový model, ktorý používa nekonečný počet
+      registrov uchovávajúcich nezáporné celé čísla. K dispozícii sú iba dve
+      operácie: inkrementácia <code>a<sub>k</sub></code>, ktorá zvýši hodnotu registra
+      <em>R<sub>k</sub></em> o 1, a dekrementácia <code>s<sub>k</sub></code>, ktorá zníži hodnotu
+      registra <em>R<sub>k</sub></em> o 1, ak je väčšia ako 0. Bloky príkazov môžu byť
+      obalené cyklom <code>(M)<sub>k</sub></code>, ktorý vykonáva blok <em>M</em> dovtedy,
+      kým register <em>R<sub>k</sub></em> nie je nulový.
+    </p>
+    <section class="howto card">
+      <h2>Návod na použitie</h2>
+      <p>Program počítadla pozostáva z príkazov <code>a<sub>k</sub></code> a <code>s<sub>k</sub></code> (inkrementácia a dekrementácia registra R<sub>k</sub>). Príkazy píšte za sebou, oddelené medzerami alebo novými riadkami. Cyklus <code>(M)<sub>k</sub></code> obklopí blok príkazov <em>M</em> a opakuje ho dovtedy, kým register R<sub>k</sub> nie je nulový.</p>
+      <ul>
+        <li>Do poľa <strong>Program</strong> zapíšte príkazy (napr. <code>a1 a2 (s1 a2)1</code>).</li>
+        <li>Do poľa <strong>Počiatočné registre</strong> vložte hodnoty <em>R<sub>1</sub></em>, <em>R<sub>2</sub></em>, … oddelené medzerou. Premenné pre počiatočné hodnoty sa priraďujú automaticky (n, m, p, …).</li>
+        <li>Stlačte <strong>Načítať program</strong> na inicializáciu. Potom môžete simuláciu riadiť pomocou tlačidiel <strong>Krok</strong>, <strong>Spustiť</strong>, <strong>Stop</strong> a <strong>Reset</strong>.</li>
+        <li>Jednotkový čas simulácie je počet vykonaných príkazov. Zobrazujeme tiež počet použitých registrov. Pre počítadlo sa logaritmické alebo symbolické zložitosti nezobrazujú.</li>
+      </ul>
+    </section>
+    <div class="split-layout abacus-layout">
+      <section class="card split-left">
+      <h2>Zadanie programu</h2>
+      <label for="abacus-program">Program (príkazy <code>a<sub>k</sub></code>, <code>s<sub>k</sub></code>, cykly <code>(M)<sub>k</sub></code>)</label>
+      <textarea id="abacus-program" placeholder="a1\na1\n(s1 a2 a2)1"></textarea>
+      <!-- Skrátený popis počiatočných registrov: hodnoty zadajte v poradí R1, R2, … oddelené medzerou -->
+      <label for="abacus-registers">Počiatočné registre</label>
+      <input type="text" id="abacus-registers" value="">
+      <!-- Premenné pre vstupy sa prideľujú automaticky (n, m, p, …) podľa poradia hodnôt registrov -->
+      <div class="controls">
+        <button id="abacus-load" type="button">Načítať program</button>
+        <button id="abacus-step" type="button" disabled>Krok</button>
+        <button id="abacus-run" type="button" disabled>Spustiť</button>
+        <button id="abacus-stop" type="button" disabled>Stop</button>
+        <button id="abacus-reset" type="button">Reset</button>
+      </div>
+      <label class="speed-control" for="abacus-speed">
+        Rýchlosť behu: <span id="abacus-speed-value">200 ms/krok</span>
+        <input type="range" id="abacus-speed" min="20" max="1000" step="10" value="200">
+      </label></section>
+      <aside class="card split-right">
+        <div class="debug-panel" id="abacus-debug">
+        <h3>Debug počítadla</h3>
+        <p><strong>Práve vykonávaný príkaz:</strong> <span id="abacus-debug-last">–</span></p>
+        <p><strong>Aktuálna akcia:</strong> <span id="abacus-debug-action">–</span></p>
+        <p><strong>Aktuálny blok:</strong> <span id="abacus-debug-block">–</span></p>
+        <div id="abacus-trace" class="program-trace"></div>
+      </div>
+        <h2>Výstup a stav simulácie</h2>
+        <h3>Stav registrov</h3>
+        <pre id="abacus-output" class="output"></pre>
+        <p><strong>Počet vykonaných krokov:</strong> <span id="abacus-unit-time">–</span></p>
+        <p><strong>Počet použitých registrov:</strong> <span id="abacus-unit-space">–</span></p>
+      </aside>
+    </div>
+  </main>
+  <script src="abacus.js"></script>
+</body>
+</html>

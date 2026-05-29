@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TZIV – Dôkazy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="proofs-page">
+  <header>
+    <nav>
+      <a href="index.html">Domov</a>
+      <a href="ram.html">RAM</a>
+      <a href="abacus.html">Počítadlo</a>
+      <a href="turing.html">Turingov stroj</a>
+      <a href="automata.html">Automaty</a>
+      <a href="proofs.html" class="active">Dôkazy</a>
+      <a href="test.html">Test</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Dôkazy, vety a lemy</h1>
+
+    <details class="howto card" open>
+      <summary><strong>Ako používať stránku</strong></summary>
+      <div class="guide-content">
+        <p>Táto stránka zhromažďuje vybrané dôkazové výsledky zo skrípt a prezentácií k TZIV. Z pôvodného zoznamu boli ponechané iba dôkazy označené ako „treba“. Zápisy sú prepísané do čitateľnej HTML podoby bez nefunkčného LaTeXu, napr. používame Σ, ε, ∪, ∩, →, ≤, ⊆, q<sub>0</sub> a horné/dolné indexy.</p>
+        <ul>
+          <li>Vyberte okruhy pomocou filtrov.</li>
+          <li>Do vyhľadávania píšte názov vety, operáciu, triedu jazykov alebo model, napr. „Kleene“, „LCF“, „komplement“, „Rice“, „Savitch“, „RAM“, „AM“, „TS“, „ekvivalencia“.</li>
+          <li>Karta obsahuje tvrdenie a stručnú dôkazovú myšlienku. Cieľom je rýchle opakovanie pred skúškou, nie nahradiť celé skriptá.</li>
+          <li>Okruh <strong>Ekvivalencie a simulácie modelov</strong> obsahuje najmä ponechané dôkazy z prehľadového obrázka: RAM ⇔ TS, AM ⇔ TS, RAM ⇔ AM a pomocné konštrukcie.</li>
+        </ul>
+      </div>
+    </details>
+
+    <section class="card proof-controls-card">
+      <h2>Výber okruhov a vyhľadávanie</h2>
+      <label for="proof-search">Vyhľadávanie v dôkazoch</label>
+      <input id="proof-search" type="search" placeholder="napr. pumpovacia lema, uzavretá na prienik, Turing, Rice, Chomského...">
+      <div id="proof-topic-filters" class="proof-topic-filters"></div>
+      <div class="controls">
+        <button id="proof-select-all" type="button">Vybrať všetko</button>
+        <button id="proof-clear" type="button">Zrušiť výber</button>
+      </div>
+      <p id="proof-count" class="muted"></p>
+    </section>
+
+    <section id="proof-list" class="proof-list"></section>
+  </main>
+
+  <script src="proofs.js"></script>
+</body>
+</html>

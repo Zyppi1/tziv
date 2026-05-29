@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TZIV – Test</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="test-page">
+  <header>
+    <nav>
+      <a href="index.html">Domov</a>
+      <a href="ram.html">RAM</a>
+      <a href="abacus.html">Počítadlo</a>
+      <a href="turing.html">Turingov stroj</a>
+      <a href="automata.html">Automaty</a>
+      <a href="proofs.html">Dôkazy</a>
+      <a href="test.html" class="active">Test</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Test z TZIV</h1>
+
+    <details class="howto card" open>
+      <summary><strong>Ako funguje test</strong></summary>
+      <div class="guide-content">
+        <p>
+          Táto sekcia nahrádza pôvodný kvíz. Test obsahuje teoretické aj praktické úlohy podľa štýlu skúšok:
+          konečné automaty, dôkazy uzáverovostí, rozhodnuteľnosť, T-vypočítateľnosť, ekvivalencie RAM/AM/TS,
+          gramatiky, RAM zložitosti a šifrovanie.
+        </p>
+        <ul>
+          <li><strong>Teoretické úlohy</strong> sú kružkovačky, doplňovačky alebo otvorené otázky typu „napíš dôkaz“.</li>
+          <li><strong>Praktické úlohy</strong> vyhodnocujú program alebo formálny zápis na testovacích vstupoch.</li>
+          <li>Pri RAM, Abacuse, Turingovom stroji, automatoch a gramatikách sa riešenie kontroluje na testovacej množine.</li>
+          <li>Otvorené dôkazové otázky sa nehodnotia automaticky; zobrazí sa vzorová osnova riešenia.</li>
+          <li>Seed zabezpečí, že rovnaké nastavenia vytvoria rovnaký test.</li>
+          <li>Predvoľby OT/RT vytvoria štruktúru podobnú reálnym skúškam, ale hlavná banka už obsahuje aj veľa vlastných úloh na precvičovanie.</li>
+          <li>Aktuálna banka má viac než 50 kružkovacích úloh, viac než 40 praktických/programovacích úloh a 20 dôkazových otvorených otázok.</li>
+          <li>V praktických úlohách už nie je správne riešenie vložené priamo do poľa odpovede. Riešenie sa zobrazí až po kliknutí na tlačidlo.</li>
+        </ul>
+      </div>
+    </details>
+
+    <section class="card test-setup-card">
+      <h2>Nastavenie testu</h2>
+
+      <div class="test-grid">
+        <label>
+          Seed
+          <input id="test-seed" type="text" value="tziv-1">
+        </label>
+
+        <label>
+          Počet úloh
+          <input id="test-count" type="number" min="1" max="40" value="12">
+        </label>
+
+        <label>
+          Typ testu
+          <select id="test-mode">
+            <option value="mixed">Kombinovaný</option>
+            <option value="theory">Teoretický</option>
+            <option value="practical">Praktický</option>
+          </select>
+        </label>
+
+        <label>
+          Predvoľba podľa skúšok
+          <select id="test-preset">
+            <option value="random">Náhodný test z banky</option>
+            <option value="ot2025">OT 2025 štýl – 11 úloh</option>
+            <option value="rt2025">RT 2025 štýl – 10 úloh</option>
+            <option value="sim2025">Simulácia 2025 – mix najčastejších</option>
+          </select>
+        </label>
+
+        <label>
+          Obtiažnosť
+          <select id="test-difficulty">
+            <option value="all">Všetky</option>
+            <option value="easy">Ľahká</option>
+            <option value="medium">Stredná</option>
+            <option value="hard">Ťažká / skúšková</option>
+          </select>
+        </label>
+      </div>
+
+      <h3>Okruhy</h3>
+      <div id="test-topics" class="test-topic-grid"></div>
+
+      <div class="controls">
+        <button id="generate-test" type="button">Vygenerovať test</button>
+        <button id="evaluate-all" type="button">Vyhodnotiť všetko</button>
+        <button id="show-all-solutions" type="button">Zobraziť všetky riešenia</button>
+      </div>
+
+      <p id="test-summary" class="muted"></p>
+    </section>
+
+    <section id="test-container" class="test-container"></section>
+  </main>
+
+  <script src="test.js"></script>
+</body>
+</html>

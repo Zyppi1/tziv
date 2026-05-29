@@ -1,0 +1,18 @@
+{
+  "total": 132,
+  "multiple_choice": 58,
+  "practical_programming": 52,
+  "proof_open": 20,
+  "fill": 2,
+  "topics": {
+    "automata": 25,
+    "turing": 17,
+    "proofs": 31,
+    "grammar": 21,
+    "theory": 1,
+    "complexity": 5,
+    "ram": 13,
+    "abacus": 13,
+    "crypto": 6
+  }
+}

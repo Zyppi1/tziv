@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TZIV – Automaty a gramatiky</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="automata-page">
+  <header>
+    <nav>
+      <a href="index.html">Domov</a>
+      <a href="ram.html">RAM</a>
+      <a href="abacus.html">Počítadlo</a>
+      <a href="turing.html">Turingov stroj</a>
+      <a href="automata.html" class="active">Automaty</a>
+      <a href="proofs.html">Dôkazy</a>
+      <a href="test.html">Test</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Automaty a gramatiky</h1>
+
+    <details class="howto card" open>
+      <summary><strong>Návod a teória podľa prezentácií</strong></summary>
+      <div class="guide-content">
+        <h2>Typy automatov podporované v tejto sekcii</h2>
+        <p>
+          Táto stránka sa venuje automatom okrem Turingovho stroja. Turingov stroj má vlastnú samostatnú stránku.
+          Automaty tu rozdeľujeme podľa toho, akú pamäť majú a aké triedy jazykov rozpoznávajú.
+        </p>
+        <table class="cost-table compact-table">
+          <thead>
+            <tr><th>Automat</th><th>Skratka</th><th>Pamäť</th><th>Čo rozpoznáva</th><th>Typické pravidlá prechodu</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Deterministický konečný automat</td><td>DKA / DFA</td><td>iba aktuálny stav</td><td>regulárne jazyky</td><td>pre dvojicu stav + symbol existuje najviac jeden prechod</td></tr>
+            <tr><td>Nedeterministický konečný automat</td><td>NKA / NFA</td><td>iba množina možných stavov</td><td>regulárne jazyky</td><td>pre stav + symbol môže existovať viac cieľov</td></tr>
+            <tr><td>NKA s epsilon prechodmi</td><td>ε-NKA</td><td>iba stav, ale smie prejsť bez čítania vstupu</td><td>regulárne jazyky</td><td>prechod cez ε alebo 3 nespotrebuje vstupný symbol</td></tr>
+            <tr><td>Dvojsmerný konečný automat</td><td>2DKA / 2NKA</td><td>stav + hlava, ktorá sa hýbe po vstupe</td><td>stále regulárne jazyky</td><td>prechod môže posunúť hlavu L/R/N</td></tr>
+            <tr><td>Viachlavý konečný automat</td><td>k-head FA</td><td>viac hláv nad vstupom, konečný riadiaci stav</td><td>pokročilý konečnostavový model</td><td>prechod závisí od symbolov pod viacerými hlavami</td></tr>
+            <tr><td>Deterministický zásobníkový automat</td><td>DPDA</td><td>jeden zásobník</td><td>deterministické bezkontextové jazyky</td><td>pre konfiguráciu je najviac jeden možný prechod</td></tr>
+            <tr><td>Nedeterministický zásobníkový automat</td><td>NPDA</td><td>jeden zásobník</td><td>bezkontextové jazyky</td><td>prechod závisí od stavu, vstupu a vrchu zásobníka</td></tr>
+            <tr><td>Lineárne ohraničený automat</td><td>LOA / LBA</td><td>páska ohraničená dĺžkou vstupu</td><td>kontextové jazyky</td><td>ako páskový automat, ale nesmie ísť mimo vyhradenú pásku</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Pravidlá tvorby gramatík</h2>
+        <div class="grammar-rules-guide">
+          <h3>Regulárna gramatika – typ 3</h3>
+          <p>
+            Regulárna gramatika generuje regulárne jazyky a zodpovedá konečným automatom.
+            Na ľavej strane je vždy presne jeden neterminál. Na pravej strane je najviac jeden terminál
+            a najviac jeden neterminál. V tejto aplikácii symbol <code>3</code> znamená ε.
+          </p>
+          <ul>
+            <li><strong>Pravolineárny tvar:</strong> <code>A -&gt; aB</code>, <code>A -&gt; a</code>, <code>A -&gt; 3</code>. Neterminál je na konci.</li>
+            <li><strong>Ľavolineárny tvar:</strong> <code>A -&gt; Ba</code>, <code>A -&gt; a</code>, <code>A -&gt; 3</code>. Neterminál je na začiatku.</li>
+            <li>Pravolineárne a ľavolineárne pravidlá nemiešame v jednej regulárnej gramatike.</li>
+            <li><code>A -&gt; aSb</code> už nie je regulárne pravidlo, lebo má neterminál medzi dvoma terminálmi.</li>
+            <li><code>A -&gt; abB</code> nie je regulárne v prísnom tvare, lebo má viac než jeden terminál pred neterminálom.</li>
+          </ul>
+
+          <h3>Bezkontextová gramatika – typ 2</h3>
+          <p>
+            Bezkontextová gramatika má na ľavej strane presne jeden neterminál, napr. <code>S</code>.
+            Pravá strana môže byť ľubovoľný reťazec terminálov a neterminálov. Zodpovedá zásobníkovým automatom.
+          </p>
+          <ul>
+            <li>Povolené: <code>S -&gt; aSb</code>, <code>S -&gt; SS</code>, <code>A -&gt; aBbb</code>, <code>S -&gt; 3</code>.</li>
+            <li>Nepovolené pre typ 2: <code>AB -&gt; a</code>, lebo ľavá strana nie je jeden neterminál.</li>
+          </ul>
+
+          <h3>Kontextová gramatika – typ 1</h3>
+          <p>
+            Kontextová gramatika má pravidlá <code>u -&gt; v</code>, kde ľavá strana obsahuje aspoň jeden neterminál
+            a pravidlo nesmie skracovať reťazec: <code>|u| ≤ |v|</code>. Zodpovedá lineárne ohraničeným automatom.
+          </p>
+          <ul>
+            <li>Povolené: <code>aA -&gt; abA</code>, <code>AB -&gt; BA</code>, <code>A -&gt; aA</code>.</li>
+            <li>Nepovolené pre typ 1: <code>AB -&gt; a</code>, lebo sa skracuje z dĺžky 2 na dĺžku 1.</li>
+            <li>Výnimka môže byť <code>S -&gt; 3</code>, ak sa štartovací symbol nevyskytuje na pravej strane pravidiel.</li>
+          </ul>
+
+          <h3>Frázová gramatika – typ 0</h3>
+          <p>
+            Frázová gramatika je najvšeobecnejšia. Ľavá strana musí obsahovať aspoň jeden neterminál,
+            ale pravidlá sa môžu aj skracovať. Zodpovedá Turingovmu stroju; tento stroj je však riešený
+            na samostatnej stránke.
+          </p>
+
+          <h3>Normálne tvary bezkontextových gramatík</h3>
+          <ul>
+            <li><strong>Chomského normálny tvar:</strong> pravidlá <code>A -&gt; BC</code>, <code>A -&gt; a</code> a prípadne <code>S -&gt; 3</code>.</li>
+            <li><strong>Greibachovej normálny tvar:</strong> pravidlá <code>A -&gt; aα</code>, teda začínajú terminálom a za ním môže nasledovať reťazec neterminálov. Príklad: <code>A -&gt; aBC</code>.</li>
+          </ul>
+        </div>
+
+        <h2>Ako používať túto stránku</h2>
+        <ol>
+          <li>Vyberte, či zadávate <strong>gramatiku</strong> alebo <strong>automat</strong>.</li>
+          <li>Pri automate vyberte typ: konečný automat, zásobníkový automat alebo lineárne ohraničený automat.</li>
+          <li>Po analýze stránka vypíše typ, deterministickosť, abecedu, stavy a ďalšie vlastnosti.</li>
+          <li>Ak je gramatika pravolineárna regulárna, stránka z nej vie vygenerovať konečný automat.</li>
+          <li>Zadajte slovo a použite <strong>Overiť slovo</strong>.</li>
+          <li>Zadajte maximálnu dĺžku a vypíšte všetky generované alebo akceptované slová do tejto dĺžky.</li>
+        </ol>
+      </div>
+    </details>
+
+    <section class="card automata-mode-card">
+      <h2>1. Vstup: gramatika alebo automat</h2>
+      <div class="automata-workspace">
+      <div class="automata-input-column">
+      <div class="mode-switch">
+        <label><input type="radio" name="input-mode" value="grammar" checked> Gramatika</label>
+        <label><input type="radio" name="input-mode" value="automaton"> Automat</label>
+      </div>
+
+      <div id="grammar-panel" class="input-panel">
+        <h3>Zadanie gramatiky</h3>
+        <p>Pravidlá píšte po riadkoch. Alternatívy oddeľujte znakom <code>|</code>. Symbol <code>3</code> znamená ε.</p>
+        <label for="grammar-input">Pravidlá</label>
+        <textarea id="grammar-input" placeholder="S -> aS | bA | 3&#10;A -> bA | a"></textarea>
+        <label for="grammar-start">Počiatočný neterminál</label>
+        <input id="grammar-start" type="text" value="S">
+        <div class="controls">
+          <button id="grammar-analyze" type="button">Analyzovať gramatiku</button>
+          <button id="grammar-to-automaton" type="button">Vygenerovať automat, ak je regulárna</button>
+        </div>
+      </div>
+
+      <div id="automaton-panel" class="input-panel hidden-panel">
+        <h3>Zadanie automatu</h3>
+        <label for="automaton-kind">Typ automatu</label>
+        <select id="automaton-kind">
+          <option value="fa">Konečný automat – DKA/NKA/ε-NKA</option>
+          <option value="pda">Zásobníkový automat – DPDA/NPDA</option>
+          <option value="lba">Lineárne ohraničený automat – LOA/LBA</option>
+        </select>
+
+        <div class="automaton-help">
+          <p><strong>Konečný automat:</strong> <code>q0 a -> q1</code>, viac cieľov <code>q0 a -> q1,q2</code>, epsilon <code>3</code> alebo <code>ε</code>.</p>
+          <p><strong>Zásobníkový automat:</strong> <code>q0 a Z -> q1 AZ</code>. Formát je <code>stav vstup vrchZásobníka -> novýStav zápisNaZásobník</code>. Symbol <code>3</code> znamená ε. Štartový symbol zásobníka je nižšie.</p>
+          <p><strong>Lineárne ohraničený automat:</strong> <code>q0 a -> q1 b R</code>. Formát je <code>stav čítanýSymbol -> novýStav zapisovanýSymbol smer</code>, smer je <code>L</code>, <code>R</code> alebo <code>N</code>. Hlava nesmie ísť mimo vstupnú pásku.</p>
+        </div>
+
+        <label for="automaton-transitions">Prechody</label>
+        <textarea id="automaton-transitions" placeholder="q0 a -> q1&#10;q1 b -> q1&#10;q1 3 -> q2"></textarea>
+        <label for="automaton-start">Počiatočný stav</label>
+        <input id="automaton-start" type="text" value="q0">
+        <label for="automaton-finals">Akceptačné stavy (oddelené medzerou)</label>
+        <input id="automaton-finals" type="text" value="">
+        <label for="stack-start" id="stack-start-label">Počiatočný symbol zásobníka (iba PDA)</label>
+        <input id="stack-start" type="text" value="Z">
+        <div class="controls">
+          <button id="automaton-load" type="button">Analyzovať a nakresliť automat</button>
+        </div>
+      </div>
+
+
+      <div class="automata-check-inner">
+<h2>Overovanie a generovanie slov</h2>
+      <div class="two-column">
+        <div>
+          <label for="word-input">Slovo na overenie</label>
+          <input id="word-input" type="text" value="">
+          <div class="controls">
+            <button id="word-check" type="button">Overiť slovo</button>
+          </div>
+        </div>
+        <div>
+          <label for="max-length">Vypísať slová do dĺžky</label>
+          <input id="max-length" type="number" min="0" max="8" value="4">
+          <div class="controls">
+            <button id="generate-words" type="button">Vypísať slová</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="word-result" class="quiz-feedback hidden-panel"></div>
+      <div id="generated-words" class="generated-words"></div>
+      </div>
+      </div>
+      <aside class="automata-result-column">
+      <div class="analysis-and-graph">
+        <h2>Výsledok a diagram</h2>
+        <div id="analysis-output" class="analysis-output">Zadajte gramatiku alebo automat a kliknite na analýzu.</div>
+        <div class="graph-container">
+          <svg id="fa-svg" class="automaton" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+      </aside>
+      </div>
+    </section></main>
+
+  <script src="automata.js"></script>
+</body>
+</html>

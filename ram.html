@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TZIV – RAM simulátor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="ram-page">
+  <header>
+    <nav>
+      <a href="index.html">Domov</a>
+      <a href="ram.html" class="active">RAM</a>
+      <a href="abacus.html">Počítadlo</a>
+      <a href="turing.html">Turingov stroj</a>
+      <a href="automata.html">Automaty</a>
+      <a href="proofs.html">Dôkazy</a>
+      <a href="test.html">Test</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Simulátor RAM</h1>
+    <p>
+      Model <em>Random Access Machine&nbsp;(RAM)</em> pozostáva z nekonečnej pamäte registrov <em>R<sub>0</sub>, R<sub>1</sub>, …</em> a programu tvoreného inštrukciami
+      ako <code>READ</code>, <code>WRITE</code>, <code>LOAD</code>, <code>STORE</code>, aritmetickými operáciami a skokmi. Register
+      <em>R<sub>0</sub></em> slúži ako akumulátor. Pri každom kroku vykonania sa počíta jednotková cena 1; logaritmická cena závisí od dĺžky operandov v bitoch.
+    </p>
+    <details class="howto card" open>
+      <summary>Návod na použitie a výpočet zložitostí</summary>
+      <div class="howto-content">
+        <p>Tento simulátor vám umožňuje písať a skúmať programy pre model RAM. Inštrukcie sa zapisujú po jednej na každý riadok, prípadne im môžete priradiť návestie vo forme <code>label:</code>. Program môže obsahovať komentáre začínajúce znakom <code>#</code>.</p>
+        <ul>
+          <li><strong>Vstupy:</strong> hodnoty zapíšte do poľa „Vstupy“ a oddeľte ich medzerou. Premenné sa priraďujú automaticky v poradí <em>n</em>, <em>m</em>, <em>p</em>, … podľa počtu vstupov.</li>
+          <li><strong>Ovládanie:</strong> po kliknutí na <strong>Načítať program</strong> môžete použiť <strong>Krok</strong>, <strong>Spustiť</strong>, <strong>Stop</strong> a <strong>Reset</strong>. Rýchlosť plynulého behu meníte posuvníkom.</li>
+        </ul>
+        <h3>Ako sa rátajú zložitosti</h3>
+        <ul>
+          <li><strong>Jednotková časová zložitosť T<sub>j</sub>:</strong> každá vykonaná RAM inštrukcia má cenu 1. Riadkový príspevok je teda počet vykonaní riadku. Riadky pred cyklom majú typicky hodnotu <em>1</em>, telo jednoduchého cyklu <em>n</em>, test na začiatku cyklu <em>n + 1</em> a vnorené cykly napr. <em>n·m</em>.</li>
+          <li><strong>Logaritmická časová zložitosť T<sub>l</sub>:</strong> cena inštrukcie závisí od operandov a hodnôt registrov. Ak sa riadok vykoná <em>n</em>-krát, jeho logaritmická cena sa násobí výrazom <em>n</em>.</li>
+          <li><strong>Jednotková priestorová zložitosť P<sub>j</sub>:</strong> počet rôznych použitých registrov vrátane akumulátora <em>R<sub>0</sub></em>.</li>
+          <li><strong>Logaritmická priestorová zložitosť P<sub>l</sub>:</strong> pre každý použitý register sa vezme najväčšia absolútna hodnota, ktorá sa v ňom počas výpočtu nachádzala. Príspevok registra je <em>⌊log₂(max)⌋ + 1</em> bitov; pre hodnotu 0 používame hodnotu 1.</li>
+          <li><strong>Zoskupovanie rovníc:</strong> vo finálnych rovniciach sa rovnaké členy automaticky zoskupujú, napríklad <em>n + n + n + n + n</em> sa zobrazí ako <em>5·n</em>.</li>
+        </ul>
+
+        <h3>Logaritmická cena operandov</h3>
+        <p>Označenie <em>c(i)</em> znamená obsah registra <em>R<sub>i</sub></em>. Funkcia <em>l(x)</em> označuje bitovú dĺžku čísla, teda približne <em>⌊log₂(|x|)⌋ + 1</em>; pre nulu používame hodnotu 1.</p>
+        <table class="cost-table compact-table">
+          <thead>
+            <tr><th>Operand</th><th>Logaritmická cena t(op)</th><th>Význam</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>=i</code></td><td><em>l(i)</em></td><td>konštanta priamo v programe</td></tr>
+            <tr><td><code>i</code></td><td><em>l(i) + l(c(i))</em></td><td>prístup k registru <em>R<sub>i</sub></em> a spracovanie jeho obsahu</td></tr>
+            <tr><td><code>*i</code></td><td><em>l(i) + l(c(i)) + l(c(c(i)))</em></td><td>nepriame adresovanie cez obsah registra <em>R<sub>i</sub></em></td></tr>
+          </tbody>
+        </table>
+
+        <h3>Cena jednotlivých RAM inštrukcií</h3>
+        <table class="cost-table compact-table">
+          <thead>
+            <tr><th>Inštrukcia</th><th>Jednotkový čas</th><th>Logaritmický čas jedného vykonania</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>LOAD op</code></td><td>1</td><td><em>t(op)</em></td></tr>
+            <tr><td><code>STORE i</code></td><td>1</td><td><em>l(c(0)) + l(i)</em></td></tr>
+            <tr><td><code>STORE *i</code></td><td>1</td><td><em>l(c(0)) + l(i) + l(c(i))</em></td></tr>
+            <tr><td><code>ADD op</code></td><td>1</td><td><em>l(c(0)) + t(op)</em></td></tr>
+            <tr><td><code>SUB op</code></td><td>1</td><td><em>l(c(0)) + t(op)</em></td></tr>
+            <tr><td><code>MUL op</code> / <code>MULT op</code></td><td>1</td><td><em>l(c(0)) + t(op)</em></td></tr>
+            <tr><td><code>DIV op</code></td><td>1</td><td><em>l(c(0)) + t(op)</em></td></tr>
+            <tr><td><code>READ i</code></td><td>1</td><td><em>l(input) + l(i)</em></td></tr>
+            <tr><td><code>READ *i</code></td><td>1</td><td><em>l(input) + l(i) + l(c(i))</em></td></tr>
+            <tr><td><code>WRITE op</code></td><td>1</td><td><em>t(op)</em></td></tr>
+            <tr><td><code>JUMP label</code></td><td>1</td><td>1</td></tr>
+            <tr><td><code>JZERO label</code></td><td>1</td><td><em>l(c(0))</em></td></tr>
+            <tr><td><code>JGTZ label</code> / <code>JGZERO label</code></td><td>1</td><td><em>l(c(0))</em></td></tr>
+            <tr><td><code>HALT</code></td><td>1</td><td>1</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Priestorové zložitosti</h3>
+        <table class="cost-table compact-table">
+          <thead>
+            <tr><th>Zložitosť</th><th>Výpočet</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Jednotkový priestor <em>P<sub>j</sub></em></td><td>počet použitých registrov vrátane <em>R<sub>0</sub></em></td></tr>
+            <tr><td>Logaritmický priestor <em>P<sub>l</sub></em></td><td>súčet <em>⌊log₂(max hodnota v registri)⌋ + 1</em> cez všetky použité registre</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <div class="ram-layout">
+      <section class="card ram-editor">
+      <h2>Zadanie programu</h2>
+      <label for="ram-program">Program (každý príkaz na nový riadok, voliteľná návesť <code>label:</code>)</label>
+      <textarea id="ram-program" placeholder="# Príklad: súčet dvoch čísel\nREAD 1\nREAD 2\nLOAD 1\nADD 2\nWRITE 0\nHALT"></textarea>
+      <label for="ram-input">Vstupy (oddelené medzerou)</label>
+      <input type="text" id="ram-input" value="">
+      <!-- Premenné pre vstupy sa prideľujú automaticky (n, m, p, …) podľa poradia vstupov -->
+      <div class="controls">
+        <button id="ram-load" type="button">Načítať program</button>
+        <button id="ram-step" type="button" disabled>Krok</button>
+        <button id="ram-run" type="button" disabled>Spustiť</button>
+        <button id="ram-stop" type="button" disabled>Stop</button>
+        <button id="ram-reset" type="button">Reset</button>
+      </div>
+      <label class="speed-control" for="ram-speed">
+        Rýchlosť behu: <span id="ram-speed-value">150 ms/krok</span>
+        <input type="range" id="ram-speed" min="20" max="1000" step="10" value="150">
+      </label>
+
+      <div class="debug-panel" id="ram-debug">
+        <h3>Debug RAM</h3>
+        <p><strong>IP:</strong> <span id="ram-debug-ip">–</span></p>
+        <p><strong>Práve vykonávaná inštrukcia:</strong> <span id="ram-debug-last">–</span></p>
+        <p><strong>Akumulátor R0:</strong> <span id="ram-debug-r0">–</span></p>
+        <p><strong>Registre:</strong></p>
+        <pre id="ram-debug-registers" class="output compact-output"></pre>
+      </div>
+      <h3>Výstup</h3>
+      <pre id="ram-output" class="output"></pre>
+      <h3>Zložitosti (skutočné)</h3>
+      <p><strong>Jednotkový čas:</strong> <span id="ram-unit-time">–</span></p>
+      <p><strong>Logaritmický čas:</strong> <span id="ram-log-time">–</span></p>
+      <p><strong>Jednotkový priestor (počet registrov):</strong> <span id="ram-unit-space">–</span></p>
+      <p><strong>Logaritmický priestor:</strong> <span id="ram-log-space">–</span></p>
+      <h3>Zložitosti (formálne)</h3>
+      <p><strong>Jednotkový čas:</strong> <span id="ram-formula-unit">–</span></p>
+      <p><strong>Jednotkový priestor:</strong> <span id="ram-formula-space">–</span></p>
+      </section>
+      <aside class="card ram-tables">
+      <h2>Tabuľky zložitostí a registrov</h2>
+      <h3>Podrobný prehľad nákladov</h3>
+      <!-- Tabuľka pre jednotlivé inštrukcie: číslo riadku, príkaz, jednotkový čas a logaritmický čas ako rovnice -->
+      <table class="cost-table" id="ram-cost-table">
+        <thead>
+          <tr>
+            <th>Riadok</th>
+            <th>Inštrukcia</th>
+            <th>Jednotkový&nbsp;čas</th>
+            <th>Logaritmický&nbsp;čas</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="ram-time-equations" class="equation-box"></div>
+
+      <h3>Prehľad registrov</h3>
+      <!-- Tabuľka pre použité registre: index, počet použití, maximálna hodnota, bitová dĺžka maxima a maximálne hodnoty a príspevky do logaritmického priestoru -->
+      <table class="cost-table" id="ram-reg-table">
+        <thead>
+          <tr>
+            <th>Register</th>
+            <th>x<sub>i</sub> = najväčšia hodnota</th>
+            <th>⌊log₂(x<sub>i</sub>)⌋ + 1</th>
+            <th>Príspevok do log. priestoru</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="ram-space-equations" class="equation-box"></div>
+      <div id="ram-loops-info"></div>
+      </aside>
+    </div>
+  </main>
+  <script src="ram.js"></script>
+</body>
+</html>
